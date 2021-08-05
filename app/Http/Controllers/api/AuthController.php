@@ -13,14 +13,14 @@ class AuthController extends Controller
         $validator = $request->validate([
             'name'=>'required',
             'email'=>'required|max:191|email|unique:users,email',
-            'password'=>'required',
+            'password'=>'required|min:6',
         ]);
         $user = User::create([
-            'name'=>$validator->name,
-            'email'=>$validator->email,
-            'password'=>Hash::make($validator->password)
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'password'=>Hash::make($request->password)
         ]);
-        $token = $user->createToken($user->email+'_Token')->plainTextToken;
+        $token = $user->createToken($user->email.'_Token')->plainTextToken;
         return response()->json([
             'status'=>200,
             'token'=>$token,
